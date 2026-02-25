@@ -1,0 +1,143 @@
+#include <LiquidCrystal.h>
+
+#define PIN_TMP36 A0
+#define PIN_LDR   A1
+#define PIN_PIR   2
+#define PIN_TRIG  3
+#define PIN_ECHO  4
+
+#define PIN_BUZZER 5
+#define PIN_LED_R  9
+#define PIN_LED_G  10
+#define PIN_LED_B  11
+
+// LCD:          (RS, E, D4, D5, D6, D7)
+LiquidCrystal lcd(6, 7, 8, 12, 13, A2);
+
+//UMBRALES
+#define TEMP_UMBRAL 39.0
+#define LUZ_UMBRAL  20
+#define DIST_UMBRAL 100
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(PIN_PIR, INPUT);
+  pinMode(PIN_TRIG, OUTPUT);
+  pinMode(PIN_ECHO, INPUT);
+
+  pinMode(PIN_BUZZER, OUTPUT);
+  pinMode(PIN_LED_R, OUTPUT);
+  pinMode(PIN_LED_G, OUTPUT);
+  pinMode(PIN_LED_B, OUTPUT);
+
+  lcd.begin(16, 2);
+  lcd.print("Sistema Museo");
+  delay(1500);
+  lcd.clear();
+}
+
+void loop() {
+
+  //TEMPERATURA TMP36
+  int lecturaTMP = analogRead(PIN_TMP36);
+  float temperatura = lecturaTMP * 5.0 / 1024 * 100 - 50;
+
+  // LUZ 
+  
+  
+  int luzRaw = analogRead(PIN_LDR);
+  int luzPct = map(luzRaw, 1023, 713, 0, 100);
+  luzPct = constrain(luzPct, 0, 100);
+  //PIR
+  bool movimiento = digitalRead(PIN_PIR);
+
+  //ULTRASONICO
+  digitalWrite(PIN_TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(PIN_TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIG, LOW);
+
+  long duracion = pulseIn(PIN_ECHO, HIGH, 30000);
+  float distancia = duracion / 58.0;
+
+  //LCD 
+  lcd.setCursor(0, 0);
+  lcd.print("T:");
+  lcd.print(temperatura, 1);
+  lcd.print("C L:");
+  lcd.print(luzPct);
+  lcd.print("% ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("D:");
+  lcd.print(distancia);
+  lcd.print("cm   ");
+
+  //SERIAL 
+  Serial.print("Temp: ");
+  Serial.print(temperatura);
+  Serial.print(" | Luz: ");
+  Serial.print(luzPct);
+  Serial.print("% | Dist: ");
+  Serial.print(distancia);
+  Serial.println(" cm");
+
+
+  //TEMPERATURA (DIA Y NOCHE)
+  if (temperatura > TEMP_UMBRAL) 
+  {
+    analogWrite(PIN_LED_R, 255);
+    analogWrite(PIN_LED_G, 0);
+    analogWrite(PIN_LED_B, 0);
+
+    digitalWrite(PIN_BUZZER, HIGH);
+    delay(150);
+    digitalWrite(PIN_BUZZER, LOW);
+  }
+
+  //NOCHE
+  else if (luzPct <= LUZ_UMBRAL) {
+
+    if (movimiento == true) {
+      analogWrite(PIN_LED_R, 255);
+      analogWrite(PIN_LED_G, 255);
+      analogWrite(PIN_LED_B, 0);
+
+      digitalWrite(PIN_BUZZER, HIGH);
+      delay(100);
+      digitalWrite(PIN_BUZZER, LOW);
+    }
+    else {
+      analogWrite(PIN_LED_R, 0);
+      analogWrite(PIN_LED_G, 0);
+      analogWrite(PIN_LED_B, 0);
+    }
+  }
+
+  //DIA
+  else {
+
+    if (distancia > 0 && distancia <= DIST_UMBRAL) {
+      analogWrite(PIN_LED_R, 255);
+      analogWrite(PIN_LED_G, 0);
+      analogWrite(PIN_LED_B, 0);
+
+      digitalWrite(PIN_BUZZER, HIGH);
+      delay(120);
+      digitalWrite(PIN_BUZZER, LOW);
+      delay(80);
+      digitalWrite(PIN_BUZZER, HIGH);
+      delay(120);
+      digitalWrite(PIN_BUZZER, LOW);
+    }
+    else {
+      analogWrite(PIN_LED_R, 0);
+      analogWrite(PIN_LED_G, 255);
+      analogWrite(PIN_LED_B, 0);
+    }
+  }
+
+  delay(500);
+}
