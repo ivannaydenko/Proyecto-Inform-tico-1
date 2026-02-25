@@ -1,0 +1,70 @@
+#define MSG_LUZ   "El nivel de luz actual es:"
+#define MSG_TEMP  " y la temperatura actual: "
+#define GRADOS    " °C"
+
+const int PIN_TMP36 = A0;
+const int PIN_LDR   = A1;
+
+const int PIN_LED_R = 9;
+const int PIN_LED_G = 10;
+const int PIN_LED_B = 11;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(PIN_LED_R, OUTPUT);
+  pinMode(PIN_LED_G, OUTPUT);
+  pinMode(PIN_LED_B, OUTPUT);
+}
+
+void loop() {
+
+  // TEMPERATURA TMP36
+  int lecturaTemp = analogRead(PIN_TMP36);
+  int temperatura = (lecturaTemp * 5.0 / 1024) * 100 -50;
+  temperatura = constrain(temperatura, -10, 150);
+
+  // LUZ AMBIENTAL (MAP INVERTIDO CALIBRADO)/
+  int lecturaLuz = analogRead(PIN_LDR);
+  int luzPorcentaje = map(lecturaLuz, 1, 310, 100, 0 );
+  luzPorcentaje = constrain(luzPorcentaje, 0, 100);
+
+  // MONITOR SERIAL 
+  Serial.print(MSG_LUZ);
+  Serial.print(luzPorcentaje);
+  Serial.print("%");
+  Serial.print(MSG_TEMP);
+  Serial.print(temperatura);
+  Serial.println(GRADOS);
+
+  // CONTROL RGB
+  if (luzPorcentaje >= 30 && luzPorcentaje <= 70)
+  {
+    if (temperatura > 90)
+    {
+      analogWrite(PIN_LED_R, 255);
+      analogWrite(PIN_LED_G, 0);
+      analogWrite(PIN_LED_B, 0);
+    }
+    else if (temperatura < 18)
+    {
+      analogWrite(PIN_LED_R, 0);
+      analogWrite(PIN_LED_G, 0);
+      analogWrite(PIN_LED_B, 255);
+    }
+    else
+    {
+      analogWrite(PIN_LED_R, 0);
+      analogWrite(PIN_LED_G, 255);
+      analogWrite(PIN_LED_B, 0);
+    }
+  }
+  else
+  {
+    analogWrite(PIN_LED_R, 0);
+    analogWrite(PIN_LED_G, 0);
+    analogWrite(PIN_LED_B, 0);
+  }
+
+  delay(1000);
+}
