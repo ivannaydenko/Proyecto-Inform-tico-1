@@ -1,0 +1,54 @@
+#define LED1_R 4
+#define LED2_R 9
+#define LED2_B 11
+#define LED2_G 5 
+#define LED3_B 2
+#define LED3_G 3
+#define BUZZ   8
+
+void setup()
+{
+  pinMode( LED1_R  , OUTPUT );
+  pinMode( LED2_R  , OUTPUT );
+  pinMode( LED2_B  , OUTPUT );
+  pinMode( LED2_G  , OUTPUT );
+  pinMode( LED3_B  , OUTPUT );
+  pinMode( LED3_G  , OUTPUT );
+}
+
+void loop()
+{ 
+  
+  analogWrite(LED1_R, 255);  
+  delay(500);
+
+  analogWrite(LED1_R, 0);
+  
+  delay(500);
+  
+  digitalWrite(LED2_R, HIGH);
+  digitalWrite(LED2_B, HIGH);
+  digitalWrite(LED2_G, LOW);   
+  
+  delay(500);
+ 
+  digitalWrite(LED2_R, LOW);
+  digitalWrite(LED2_B, LOW);
+  
+  delay(500);
+  
+  analogWrite(LED3_B, 130);    
+  analogWrite(LED3_G, 130);    
+  
+  delay(500);
+
+  analogWrite(LED3_B, 0);
+  analogWrite(LED3_G, 0);
+  
+  delay(500);
+  
+  analogWrite(BUZZ, 200);
+  delay(100);
+  analogWrite(BUZZ, 0);
+  delay(100);
+}
