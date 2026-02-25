@@ -1,0 +1,74 @@
+#define LM35_PIN A0
+#define PIR_PIN 2
+#define FAN_ENABLE 9
+#define FAN_IN1 7
+#define FAN_IN2 8
+#define LAMP_PIN 10
+
+void setup() {
+  pinMode(PIR_PIN, INPUT);
+
+  pinMode(FAN_ENABLE, OUTPUT);
+  pinMode(FAN_IN1, OUTPUT);
+  pinMode(FAN_IN2, OUTPUT);
+
+  pinMode(LAMP_PIN, OUTPUT);
+
+  digitalWrite(FAN_IN1, HIGH);
+  digitalWrite(FAN_IN2, LOW);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  // TEMPERATURA (TMP36(
+  int lectura = analogRead(LM35_PIN);
+  int temperatura = (lectura * 5.0 / 1024) * 100 - 50;
+  temperatura = constrain(temperatura, -10, 150);
+
+  // SENSOR PIR  
+  int movimiento = digitalRead(PIR_PIN);
+
+  int pwm = 0;
+
+  // CONTROL DEL SISTEMA 
+  if (temperatura > 50)
+ {
+   pwm = 255;
+   digitalWrite(LAMP_PIN, LOW);   
+ }
+ else if (movimiento == HIGH && temperatura <= 50)
+ {
+   if (temperatura <= 15)
+     pwm = 50;
+   else if (temperatura <= 20)
+     pwm = 100;
+   else if (temperatura <= 30)
+     pwm = 150;
+   else
+     pwm = 255;
+
+  digitalWrite(LAMP_PIN, HIGH);
+}
+else
+{
+  pwm = 0;
+  digitalWrite(LAMP_PIN, LOW);
+}
+
+
+  analogWrite(FAN_ENABLE, pwm);
+
+  // MONITOR SERIAL 
+  Serial.print("Temp: ");
+  Serial.print(temperatura);
+  Serial.print(" C | Movimiento: ");
+
+  if (movimiento == HIGH)
+    Serial.println("SI");
+  else
+    Serial.println("NO");
+
+  delay(1000);
+}
