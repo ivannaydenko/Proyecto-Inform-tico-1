@@ -1,0 +1,34 @@
+#define POT_R A0
+#define POT_G A1
+#define POT_B A2
+
+#define R 3
+#define G 5
+#define B 6
+
+void setup() {
+  pinMode(R, OUTPUT);
+  pinMode(G, OUTPUT);
+  pinMode(B, OUTPUT);
+}
+
+void loop() {
+
+  int lecturaR = analogRead(POT_R);
+  int lecturaG = analogRead(POT_G);
+  int lecturaB = analogRead(POT_B);
+
+  int valorR = map(lecturaR, 0, 1023, 0, 255);
+  int valorG = map(lecturaG, 0, 1023, 0, 255);
+  int valorB = map(lecturaB, 0, 1023, 0, 255);
+
+  valorR = constrain(valorR, 0, 255);
+  valorG = constrain(valorG, 0, 255);
+  valorB = constrain(valorB, 0, 255);
+
+  analogWrite(R, valorR);
+  analogWrite(G, valorG);
+  analogWrite(B, valorB);
+
+  delay(50);
+}

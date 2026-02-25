@@ -1,0 +1,66 @@
+#define BOTON 2
+#define R1 3
+#define G2 4
+#define B3 5
+
+// Variable contadora: indica que rgb se enciende
+int paso = 0;
+
+// Guarda el estado anterior del boton
+int botonAnterior = 0;
+
+void setup() {
+
+  // Configuracion del boton
+  pinMode(BOTON, INPUT_PULLUP);
+
+  // Configuracion de todos los pines rgb como salida
+  pinMode(R1, OUTPUT);
+  
+  pinMode(G2, OUTPUT);
+
+  pinMode(B3, OUTPUT);
+}
+
+void loop() {
+
+  // Lectura del boton (invertida por INPUT_PULLUP)
+  int botonActual = !digitalRead(BOTON);
+
+  // Detecta el toque del boton
+  if (botonActual && !botonAnterior) {
+
+    // Apaga todos los leds rgb
+    digitalWrite(R1, LOW);
+
+    digitalWrite(G2, LOW);
+
+    digitalWrite(B3, LOW);
+
+    // Segun el valor de paso, prende solo un rgb
+    if (paso == 0) {
+      digitalWrite(R1, HIGH);   
+    }
+    else if (paso == 1) {
+      digitalWrite(G2, HIGH);   
+    }
+    else {
+      digitalWrite(B3, HIGH);   
+    }
+
+    // Avanza al siguiente led
+    paso = paso + 1;
+
+    // Si llega a 3, vuelve a empezar
+    if (paso >= 3) {
+      paso = 0;
+    }
+
+    //delay para evitar rebotes
+    delay(200);
+  }
+
+  // Guarda el estado del boton para la proxima vuelta
+  botonAnterior = botonActual;
+
+}

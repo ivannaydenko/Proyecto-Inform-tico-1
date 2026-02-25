@@ -1,0 +1,57 @@
+#define PIN_LED_R 3
+#define PIN_LED_G 5
+#define PIN_LED_B 6
+#define PIN_POT   A0
+#define PIN_BOTON 2
+
+int valorPot = 0;
+int estadoLED = 0; // 0 = apagado, 1 = encendido
+int rojo = 0, verde = 0, azul = 0;
+
+void setup() {
+  pinMode(PIN_LED_R, OUTPUT);
+  pinMode(PIN_LED_G, OUTPUT);
+  pinMode(PIN_LED_B, OUTPUT);
+  pinMode(PIN_BOTON, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  //Control del led con boton
+  if (digitalRead(PIN_BOTON) == LOW) { // boton presionado
+    estadoLED = 1;
+  }
+
+  if (estadoLED == 1) {
+    //Lectura del potenciometro
+    valorPot = analogRead(PIN_POT);
+
+    //Divide el rango 0-1023 en tres segmentos para rgb
+    if (valorPot <= 341) {           // Primer tercio rojo
+      rojo = map(valorPot, 0, 341, 0, 255);
+      verde = 0;
+      azul = 0;
+    } 
+    else if (valorPot > 341 && valorPot <= 682) { // Segundo tercio verde
+      verde = map(valorPot, 342, 682, 0, 255);
+      rojo = 0;
+      azul = 0;
+    } 
+    else if (valorPot > 682) {       // Tercer tercio azul
+      azul = map(valorPot, 683, 1023, 0, 255);
+      rojo = 0;
+      verde = 0;
+    }
+
+    // Aplicar colores al led rgb
+    analogWrite(PIN_LED_R, rojo);
+    analogWrite(PIN_LED_G, verde);
+    analogWrite(PIN_LED_B, azul);
+
+    //Mostrar datos en monitor en serie
+    Serial.print("R: "); Serial.print(rojo);
+    Serial.print(" G: "); Serial.print(verde);
+    Serial.print(" B: "); Serial.println(azul);
+  }
+
+}

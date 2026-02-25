@@ -1,0 +1,43 @@
+#define BOTON 2
+#define R 3
+#define G 4
+#define B 5
+
+int paso = 0;
+int botonAnterior = 0;
+
+void setup() {
+  pinMode(BOTON, INPUT_PULLUP);
+  pinMode(R, OUTPUT);
+  pinMode(G, OUTPUT);
+  pinMode(B, OUTPUT);
+}
+
+void loop() {
+
+  int botonActual = !digitalRead(BOTON);
+
+  if (botonActual && !botonAnterior) {
+
+    // Apagar RGB
+    digitalWrite(R, LOW);
+    digitalWrite(G, LOW);
+    digitalWrite(B, LOW);
+
+    // Secuencia de colores
+    if (paso == 0) { digitalWrite(R, HIGH); }                          // Rojo
+    else if (paso == 1) { digitalWrite(G, HIGH); digitalWrite(B, HIGH); } // Cian
+    else if (paso == 2) { digitalWrite(G, HIGH); }                     // Verde
+    else if (paso == 3) { digitalWrite(R, HIGH); digitalWrite(B, HIGH); } // Magenta
+    else if (paso == 4) { digitalWrite(B, HIGH); }                     // Azul
+    else if (paso == 5) { digitalWrite(R, HIGH); digitalWrite(G, HIGH); digitalWrite(B, HIGH); } // Blanco
+    else { digitalWrite(R, HIGH); digitalWrite(G, HIGH); }             // Amarillo
+
+    paso = paso + 1;
+    if (paso >= 7) paso = 0;
+
+    delay(200);
+  }
+
+  botonAnterior = botonActual;
+}

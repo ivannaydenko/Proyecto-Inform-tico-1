@@ -1,0 +1,49 @@
+#define PIN_LED_ROJO 3
+#define PIN_LED_AZUL 5
+#define PIN_BUZZER   6
+
+int estadoLED = 0;       // 0 = rojo encendido, 1 = azul encendido
+int valorBuzzer = 0;     // valor PWM para el buzzer
+int subir = 1;           // controla subida/bajada de tono
+int paso = 5;            // incremento de tono
+
+void setup() {
+  pinMode(PIN_LED_ROJO, OUTPUT);
+  pinMode(PIN_LED_AZUL, OUTPUT);
+  pinMode(PIN_BUZZER, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  //Simulacion luces
+  if (estadoLED == 0) {
+    digitalWrite(PIN_LED_ROJO, HIGH);
+    digitalWrite(PIN_LED_AZUL, LOW);
+    estadoLED = 1;
+    delay(200); // tiempo entre cambios de luz
+  } 
+  else if (estadoLED == 1) {
+    digitalWrite(PIN_LED_ROJO, LOW);
+    digitalWrite(PIN_LED_AZUL, HIGH);
+    estadoLED = 0;
+    delay(200); 
+  }
+
+  //Simulacion de sirena 
+  if (subir == 1) {
+    valorBuzzer = valorBuzzer + paso;
+    if (valorBuzzer >= 250) { // máximo PWM
+      subir = 0;
+    }
+  } 
+  else if (subir == 0) {
+    valorBuzzer = valorBuzzer - paso;
+    if (valorBuzzer <= 50) {  // minimo PWM, nunca se apagara
+      subir = 1;
+    }
+  }
+
+  analogWrite(PIN_BUZZER, valorBuzzer);
+  Serial.print("PWM Buzzer: ");
+  Serial.println(valorBuzzer);
+}

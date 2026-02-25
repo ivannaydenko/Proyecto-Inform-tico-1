@@ -1,0 +1,32 @@
+#define PIN_BOTON  2
+#define PIN_BUZZER 3
+
+int estado = 0;
+
+void setup() {
+  pinMode(PIN_BOTON, INPUT_PULLUP);
+  pinMode(PIN_BUZZER, OUTPUT);
+}
+
+void loop() {
+
+  int botonPresionado = !digitalRead(PIN_BOTON);
+
+  if (botonPresionado) {
+
+    if (estado == 0) {
+      digitalWrite(PIN_BUZZER, HIGH);
+      estado = 1;
+    }
+    else {
+      digitalWrite(PIN_BUZZER, LOW);
+      estado = 0;
+    }
+
+    delay(300);
+  }
+  else {
+    digitalWrite(PIN_BUZZER, LOW);
+    estado = 0;
+  }
+}

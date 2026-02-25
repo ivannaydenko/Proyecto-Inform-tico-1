@@ -1,0 +1,59 @@
+#define LED1 3
+#define LED2 5
+#define LED3 6
+#define LED4 9
+#define LED5 10
+
+int paso = 0;
+
+void setup() {
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
+  pinMode(LED4, OUTPUT);
+  pinMode(LED5, OUTPUT);
+}
+
+void loop() {
+
+  if (paso == 0) {
+    analogWrite(LED1, 0);
+    analogWrite(LED2, 60);
+    analogWrite(LED3, 120);
+    analogWrite(LED4, 180);
+    analogWrite(LED5, 255);
+  }
+  else if (paso == 1) {
+    analogWrite(LED1, 255);
+    analogWrite(LED2, 0);
+    analogWrite(LED3, 60);
+    analogWrite(LED4, 120);
+    analogWrite(LED5, 180);
+  }
+  else if (paso == 2) {
+    analogWrite(LED1, 180);
+    analogWrite(LED2, 255);
+    analogWrite(LED3, 0);
+    analogWrite(LED4, 60);
+    analogWrite(LED5, 120);
+  }
+  else if (paso == 3) {
+    analogWrite(LED1, 120);
+    analogWrite(LED2, 180);
+    analogWrite(LED3, 255);
+    analogWrite(LED4, 0);
+    analogWrite(LED5, 60);
+  }
+  else {
+    analogWrite(LED1, 60);
+    analogWrite(LED2, 120);
+    analogWrite(LED3, 180);
+    analogWrite(LED4, 255);
+    analogWrite(LED5, 0);
+  }
+
+  paso = paso + 1;
+  if (paso >= 5) paso = 0;
+
+  delay(400);
+}

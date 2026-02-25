@@ -1,0 +1,77 @@
+#define PIN_LED1_R 3
+#define PIN_LED1_G 4
+#define PIN_LED1_B 5
+
+#define PIN_LED2_R 6
+#define PIN_LED2_G 7
+#define PIN_LED2_B 8
+
+#define PIN_LED3_R 9
+#define PIN_LED3_G 10
+#define PIN_LED3_B 11
+
+#define PIN_LED4_R 12
+#define PIN_LED4_G A0
+#define PIN_LED4_B A1
+
+#define PIN_LED5_R A2
+#define PIN_LED5_G A3
+#define PIN_LED5_B A4
+
+#define PIN_BOTON 2
+#define PIN_POT   A5
+
+int valorPot = 0;
+int tardanza = 0;
+int estadoSecuencia = 0; // 0 = apagada, 1 = iniciada
+
+void setup() {
+  pinMode(PIN_BOTON, INPUT_PULLUP);
+
+  // Configurar todos los pines de leds como OUTPUT
+  pinMode(PIN_LED1_R, OUTPUT); pinMode(PIN_LED1_G, OUTPUT); pinMode(PIN_LED1_B, OUTPUT);
+  pinMode(PIN_LED2_R, OUTPUT); pinMode(PIN_LED2_G, OUTPUT); pinMode(PIN_LED2_B, OUTPUT);
+  pinMode(PIN_LED3_R, OUTPUT); pinMode(PIN_LED3_G, OUTPUT); pinMode(PIN_LED3_B, OUTPUT);
+  pinMode(PIN_LED4_R, OUTPUT); pinMode(PIN_LED4_G, OUTPUT); pinMode(PIN_LED4_B, OUTPUT);
+  pinMode(PIN_LED5_R, OUTPUT); pinMode(PIN_LED5_G, OUTPUT); pinMode(PIN_LED5_B, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  //Leer potenciometro
+  valorPot = analogRead(PIN_POT);
+  tardanza = map(valorPot, 0, 1023, 100, 2000); //velocidad de secuencia 0.1s a 2s
+
+  //Boton para iniciar secuencia
+  if (digitalRead(PIN_BOTON) == LOW) {
+    estadoSecuencia = 1;
+  }
+
+  if (estadoSecuencia == 1) {
+    //led 1 (rojo)
+    analogWrite(PIN_LED1_R, 255); analogWrite(PIN_LED1_G, 0); analogWrite(PIN_LED1_B, 0);
+    delay(tardanza);
+    analogWrite(PIN_LED1_R, 0); analogWrite(PIN_LED1_G, 0); analogWrite(PIN_LED1_B, 0);
+
+    //led 2 (verde)
+    analogWrite(PIN_LED2_R, 0); analogWrite(PIN_LED2_G, 255); analogWrite(PIN_LED2_B, 0);
+    delay(tardanza);
+    analogWrite(PIN_LED2_R, 0); analogWrite(PIN_LED2_G, 0); analogWrite(PIN_LED2_B, 0);
+
+    //led 3 (azul)
+    analogWrite(PIN_LED3_R, 0); analogWrite(PIN_LED3_G, 0); analogWrite(PIN_LED3_B, 255);
+    delay(tardanza);
+    analogWrite(PIN_LED3_R, 0); analogWrite(PIN_LED3_G, 0); analogWrite(PIN_LED3_B, 0);
+
+    //led 4 (amarillo = R+G)
+    analogWrite(PIN_LED4_R, 255); analogWrite(PIN_LED4_G, 255); analogWrite(PIN_LED4_B, 0);
+    delay(tardanza);
+    analogWrite(PIN_LED4_R, 0); analogWrite(PIN_LED4_G, 0); analogWrite(PIN_LED4_B, 0);
+
+    //led 5 (magenta = R+B)
+    analogWrite(PIN_LED5_R, 255); analogWrite(PIN_LED5_G, 0); analogWrite(PIN_LED5_B, 255);
+    delay(tardanza);
+    analogWrite(PIN_LED5_R, 0); analogWrite(PIN_LED5_G, 0); analogWrite(PIN_LED5_B, 0);
+  }
+}

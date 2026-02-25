@@ -1,0 +1,35 @@
+#define LED_ROJO   2
+#define LED_VERDE  3
+#define BUZZER     4
+
+int paso = 0;
+
+void setup() {
+  pinMode(LED_ROJO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+}
+
+void loop() {
+
+  if (paso == 0) {
+    // Tren pasando
+    digitalWrite(LED_ROJO, HIGH);
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(BUZZER, HIGH);
+  }
+  else {
+    // Vía libre
+    digitalWrite(LED_ROJO, LOW);
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(BUZZER, LOW);
+  }
+
+  delay(1000);
+
+  paso = paso + 1;
+
+  if (paso >= 2) {
+    paso = 0;
+  }
+}

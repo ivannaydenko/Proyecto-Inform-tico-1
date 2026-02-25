@@ -1,0 +1,58 @@
+#define R 3
+#define G 5
+#define B 6
+
+int paso = 0;
+
+void setup() {
+  pinMode(R, OUTPUT);
+  pinMode(G, OUTPUT);
+  pinMode(B, OUTPUT);
+}
+
+void loop() {
+
+  // Apagar rgb
+  analogWrite(R, 0);
+  analogWrite(G, 0);
+  analogWrite(B, 0);
+
+  if (paso == 0) {          // Cian tenue
+    analogWrite(G, 80);
+    analogWrite(B, 80);
+  }
+  else if (paso == 1) {     // Cian medio
+    analogWrite(G, 160);
+    analogWrite(B, 160);
+  }
+  else if (paso == 2) {     // Cian fuerte
+    analogWrite(G, 255);
+    analogWrite(B, 255);
+  }
+  else if (paso == 3) {     // Rojo tenue
+    analogWrite(R, 80);
+  }
+  else if (paso == 4) {     // Rojo medio
+    analogWrite(R, 160);
+  }
+  else if (paso == 5) {     // Rojo fuerte
+    analogWrite(R, 255);
+  }
+  else if (paso == 6) {     // Amarillo tenue
+    analogWrite(R, 80);
+    analogWrite(G, 80);
+  }
+  else if (paso == 7) {     // Amarillo medio
+    analogWrite(R, 160);
+    analogWrite(G, 160);
+  }
+  else {                    // Amarillo fuerte
+    analogWrite(R, 255);
+    analogWrite(G, 255);
+  }
+
+  paso = paso + 1;
+  if (paso >= 9) paso = 0;
+
+  delay(300);
+}

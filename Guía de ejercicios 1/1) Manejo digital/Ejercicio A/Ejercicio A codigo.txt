@@ -1,0 +1,110 @@
+#define Semaf_ROJO_R 2
+#define Semaf_ROJO_B 3
+#define Semaf_ROJO_G 4
+
+#define Semaf_AMAR_R 5
+#define Semaf_AMAR_B 6
+#define Semaf_AMAR_G 7
+
+#define Semaf_VERD_R 8
+#define Semaf_VERD_B 9
+#define Semaf_VERD_G 10
+
+#define PEAT_R 11
+#define PEAT_B 12
+#define PEAT_G 13
+
+int estado = 0;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(Semaf_ROJO_R, OUTPUT);
+  pinMode(Semaf_ROJO_G, OUTPUT);
+  pinMode(Semaf_ROJO_B, OUTPUT);
+
+  pinMode(Semaf_AMAR_R, OUTPUT);
+  pinMode(Semaf_AMAR_G, OUTPUT);
+  pinMode(Semaf_AMAR_B, OUTPUT);
+
+  pinMode(Semaf_VERD_R, OUTPUT);
+  pinMode(Semaf_VERD_G, OUTPUT);
+  pinMode(Semaf_VERD_B, OUTPUT);
+
+  pinMode(PEAT_R, OUTPUT);
+  pinMode(PEAT_G, OUTPUT);
+  pinMode(PEAT_B, OUTPUT);
+}
+
+void loop() {
+
+  if (estado == 0) {
+    // Semaf VERDE - PEATON ROJO
+    digitalWrite(Semaf_VERD_G, HIGH);
+    digitalWrite(Semaf_VERD_R, LOW);
+    digitalWrite(Semaf_VERD_B, LOW);
+
+    digitalWrite(Semaf_AMAR_R, LOW);
+    digitalWrite(Semaf_AMAR_G, LOW);
+    digitalWrite(Semaf_AMAR_B, LOW);
+
+    digitalWrite(Semaf_ROJO_R, LOW);
+    digitalWrite(Semaf_ROJO_G, LOW);
+    digitalWrite(Semaf_ROJO_B, LOW);
+
+    digitalWrite(PEAT_R, HIGH);
+    digitalWrite(PEAT_G, LOW);
+    digitalWrite(PEAT_B, LOW);
+
+    Serial.println("Semaforo: VERDE | PEATON: ROJO");
+    delay(5000);
+
+    estado = 1;
+  }
+  else if (estado == 1) {
+    // Semaf AMARILLO - PEATON ROJO
+    digitalWrite(Semaf_AMAR_R, HIGH);
+    digitalWrite(Semaf_AMAR_G, HIGH);
+    digitalWrite(Semaf_AMAR_B, LOW);
+
+    digitalWrite(Semaf_VERD_R, LOW);
+    digitalWrite(Semaf_VERD_G, LOW);
+    digitalWrite(Semaf_VERD_B, LOW);
+
+    digitalWrite(Semaf_ROJO_R, LOW);
+    digitalWrite(Semaf_ROJO_G, LOW);
+    digitalWrite(Semaf_ROJO_B, LOW);
+
+    digitalWrite(PEAT_R, HIGH);
+    digitalWrite(PEAT_G, LOW);
+    digitalWrite(PEAT_B, LOW);
+
+    Serial.println("Semaforo: AMARILLO | PEATON: ROJO");
+    delay(2000);
+
+    estado = 2;
+  }
+  else if (estado == 2) {
+    // Semaf ROJO - PEATON VERDE
+    digitalWrite(Semaf_ROJO_R, HIGH);
+    digitalWrite(Semaf_ROJO_G, LOW);
+    digitalWrite(Semaf_ROJO_B, LOW);
+
+    digitalWrite(Semaf_VERD_R, LOW);
+    digitalWrite(Semaf_VERD_G, LOW);
+    digitalWrite(Semaf_VERD_B, LOW);
+
+    digitalWrite(Semaf_AMAR_R, LOW);
+    digitalWrite(Semaf_AMAR_G, LOW);
+    digitalWrite(Semaf_AMAR_B, LOW);
+
+    digitalWrite(PEAT_R, LOW);
+    digitalWrite(PEAT_G, HIGH);
+    digitalWrite(PEAT_B, LOW);
+
+    Serial.println("Semaforo: ROJO | PEATON: VERDE");
+    delay(5000);
+
+    estado = 0;
+  }
+}

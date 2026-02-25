@@ -1,0 +1,64 @@
+#define R1 2
+#define G1 3
+#define B1 4
+
+#define R2 5
+#define G2 6
+#define B2 7
+
+int paso = 0;
+
+void setup() {
+  pinMode(R1, OUTPUT);
+  pinMode(G1, OUTPUT);
+  pinMode(B1, OUTPUT);
+
+  pinMode(R2, OUTPUT);
+  pinMode(G2, OUTPUT);
+  pinMode(B2, OUTPUT);
+}
+
+void loop() {
+
+  // Apagar ambos rgb
+  digitalWrite(R1, LOW);
+  digitalWrite(G1, LOW);
+  digitalWrite(B1, LOW);
+
+  digitalWrite(R2, LOW);
+  digitalWrite(G2, LOW);
+  digitalWrite(B2, LOW);
+
+  int color = paso / 2;
+
+  if (paso % 2 == 0) {
+    // rgb 1 encendido
+
+    if (color == 0) { digitalWrite(R1, HIGH); }                 // Rojo
+    else if (color == 1) { digitalWrite(G1, HIGH); digitalWrite(B1, HIGH); } // Cian
+    else if (color == 2) { digitalWrite(G1, HIGH); }             // Verde
+    else if (color == 3) { digitalWrite(R1, HIGH); digitalWrite(B1, HIGH); } // Magenta
+    else if (color == 4) { digitalWrite(B1, HIGH); }             // Azul
+    else if (color == 5) { digitalWrite(R1, HIGH); digitalWrite(G1, HIGH); digitalWrite(B1, HIGH); } // Blanco
+    else if (color == 6) { digitalWrite(R1, HIGH); digitalWrite(G1, HIGH); } // Amarillo
+
+  } else {
+    // rgb 2 encendido
+
+    if (color == 0) { digitalWrite(R2, HIGH); }
+    else if (color == 1) { digitalWrite(G2, HIGH); digitalWrite(B2, HIGH); }
+    else if (color == 2) { digitalWrite(G2, HIGH); }
+    else if (color == 3) { digitalWrite(R2, HIGH); digitalWrite(B2, HIGH); }
+    else if (color == 4) { digitalWrite(B2, HIGH); }
+    else if (color == 5) { digitalWrite(R2, HIGH); digitalWrite(G2, HIGH); digitalWrite(B2, HIGH); }
+    else if (color == 6) { digitalWrite(R2, HIGH); digitalWrite(G2, HIGH); }
+  }
+
+  delay(1000);
+
+  paso = paso + 1;
+  if (paso >= 14) {
+    paso = 0;
+  }
+
+}

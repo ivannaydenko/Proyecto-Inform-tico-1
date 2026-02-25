@@ -1,0 +1,55 @@
+#define POT A0
+
+#define R1 3
+#define G1 5
+#define B1 6
+
+#define R2 9
+#define G2 10
+#define B2 11
+
+int estado = 0;
+
+void setup() {
+  pinMode(R1, OUTPUT);
+  pinMode(G1, OUTPUT);
+  pinMode(B1, OUTPUT);
+
+  pinMode(R2, OUTPUT);
+  pinMode(G2, OUTPUT);
+  pinMode(B2, OUTPUT);
+}
+
+void loop() {
+
+  int lectura = analogRead(POT);
+  int tiempo = map(lectura, 0, 1023, 100, 1000);
+  tiempo = constrain(tiempo, 100, 1000);
+
+  if (estado == 0) {
+    // Encendido
+    analogWrite(R1, 255);
+    analogWrite(B1, 255);   // Magenta
+    analogWrite(G1, 0);
+
+    analogWrite(R2, 255);
+    analogWrite(G2, 255);   // Amarillo
+    analogWrite(B2, 0);
+
+    estado = 1;
+  }
+  else {
+    // Apagado
+    analogWrite(R1, 0);
+    analogWrite(G1, 0);
+    analogWrite(B1, 0);
+
+    analogWrite(R2, 0);
+    analogWrite(G2, 0);
+    analogWrite(B2, 0);
+
+    estado = 0;
+  }
+
+  delay(tiempo);
+}

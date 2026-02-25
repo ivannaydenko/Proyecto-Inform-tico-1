@@ -1,0 +1,27 @@
+#define PIN_BUZZER 3
+#define PIN_POT A0
+
+int valorPot = 0;      // lectura del potenciometro
+int tonoBuzzer = 0;    // valor PWM aplicado al buzzer
+
+void setup() {
+  pinMode(PIN_BUZZER, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Leer potenciometro
+  valorPot = analogRead(PIN_POT);
+
+  // Map valor a rango 50-255 (nunca se va a apagar)
+  tonoBuzzer = map(valorPot, 0, 1023, 50, 255);
+
+  // Enviar señal al buzzer
+  analogWrite(PIN_BUZZER, tonoBuzzer);
+
+  // Mostrar datos en monitor en serie
+  Serial.print("Valor potenciometro: ");
+  Serial.print(valorPot);
+  Serial.print(" -> PWM Buzzer: ");
+  Serial.println(tonoBuzzer);
+}

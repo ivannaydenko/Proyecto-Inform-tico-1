@@ -1,0 +1,21 @@
+#define LED 3
+
+int nivel = 0;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+}
+
+void loop() {
+
+  if (nivel == 0)      analogWrite(LED, 0);    // apagado
+  else if (nivel == 1) analogWrite(LED, 60);   // bajo
+  else if (nivel == 2) analogWrite(LED, 120);  // medio
+  else if (nivel == 3) analogWrite(LED, 180);  // alto
+  else                 analogWrite(LED, 255);  // máximo
+
+  nivel = nivel + 1;
+  if (nivel >= 5) nivel = 0;
+
+  delay(800);
+}
