@@ -1,0 +1,125 @@
+#define LED1_R 6
+#define LED2_R 9
+#define LED2_B 11
+#define LED2_G 5 
+#define LED3_B 2
+#define LED3_G 3
+#define BUZZ   8
+#define POT_TIEMPO A0
+#define POT_R A1
+#define POT_G A2
+#define POT_B A3
+#define BOTON A4
+
+int pasoSecuencia = 0;
+int estadoBotonAnterior = 0;
+int secuenciaActiva = 1;
+
+int tiempoMs;
+int R, G, B;
+
+void setup()
+{
+  pinMode(LED1_R, OUTPUT);
+  pinMode(LED2_R, OUTPUT);
+  pinMode(LED2_B, OUTPUT);
+  pinMode(LED2_G, OUTPUT);
+  pinMode(LED3_B, OUTPUT);
+  pinMode(LED3_G, OUTPUT);
+  pinMode(BUZZ, OUTPUT);
+  pinMode(BOTON, INPUT_PULLUP);
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  // LECTURA BOTÓN 
+  int estadoBoton = !digitalRead(BOTON);
+
+  if (estadoBoton == 1 && estadoBotonAnterior == 0)
+  {
+    secuenciaActiva = !secuenciaActiva;
+    delay(200);
+  }
+  estadoBotonAnterior = estadoBoton;
+
+  // SI ESTÁ PAUSADO 
+  if (secuenciaActiva == 0)
+  {
+    digitalWrite(LED1_R, LOW);
+    digitalWrite(LED2_R, LOW);
+    digitalWrite(LED2_B, LOW);
+    digitalWrite(LED2_G, LOW);
+    digitalWrite(LED3_B, LOW);
+    digitalWrite(LED3_G, LOW);
+    digitalWrite(BUZZ, LOW);
+    delay(50);
+  }
+  else
+  {
+    // LECTURA POTENCIÓMETROS
+    tiempoMs = map(analogRead(POT_TIEMPO), 0, 1023, 500, 3000);
+
+    R = map(analogRead(POT_R), 0, 1023, 0, 255);
+    G = map(analogRead(POT_G), 0, 1023, 0, 255);
+    B = map(analogRead(POT_B), 0, 1023, 0, 255);
+
+    R = constrain(R, 0, 255);
+    G = constrain(G, 0, 255);
+    B = constrain(B, 0, 255);
+
+    // MONITOR SERIAL 
+    Serial.print("Tiempo(ms): ");
+    Serial.println(tiempoMs);
+    Serial.print("R: ");
+    Serial.print(R);
+    Serial.print(" G: ");
+    Serial.print(G);
+    Serial.print(" B: ");
+    Serial.println(B);
+    Serial.println("--------------");
+
+    // SECUENCIA CON BUZZER 
+    if (pasoSecuencia == 0)
+    {
+      digitalWrite(BUZZ, HIGH);
+      delay(5);
+      digitalWrite(BUZZ, LOW);
+
+      analogWrite(LED1_R, R);
+      delay(tiempoMs);
+      analogWrite(LED1_R, 0);
+
+      pasoSecuencia = 1;
+    }
+    else if (pasoSecuencia == 1)
+    {
+      digitalWrite(BUZZ, HIGH);
+      delay(10);
+      digitalWrite(BUZZ, LOW);
+
+      analogWrite(LED2_R, R);
+      analogWrite(LED2_B, B);
+      delay(tiempoMs);
+      analogWrite(LED2_R, 0);
+      analogWrite(LED2_B, 0);
+
+      pasoSecuencia = 2;
+    }
+    else if (pasoSecuencia == 2)
+    {
+      digitalWrite(BUZZ, HIGH);
+      delay(3);
+      digitalWrite(BUZZ, LOW);
+
+      analogWrite(LED3_B, B / 2);
+      analogWrite(LED3_G, G / 2);
+      delay(tiempoMs);
+      analogWrite(LED3_B, 0);
+      analogWrite(LED3_G, 0);
+
+      pasoSecuencia = 0;
+    }
+  }
+}
